@@ -52,7 +52,7 @@ class TemplateApp extends Component {
             return (
                 // Here you can add another NavBarButton. Use Fontawesome icon.
                 <View style={Style.rootContainer}
-                    {...this.panResponder.panHandlers}
+
                     >
                     <View style={Style.navBar}>
                         <NavBarButton value="Tab 1" onPress={() => this.changeState('Tab 1')} name='home' selectedTab={this.state.selectedTab}></NavBarButton>
@@ -60,7 +60,9 @@ class TemplateApp extends Component {
                         <NavBarButton value="Tab 3" onPress={() => this.changeState('Tab 3')} name='gift' selectedTab={this.state.selectedTab}></NavBarButton>
                         <NavBarButton value="Tab 4" onPress={() => this.changeState('Tab 4')} name='user' selectedTab={this.state.selectedTab}></NavBarButton>
                     </View>
-                    <View style={Style.contentPlaceHolder}>
+                    <View style={Style.contentPlaceHolder}
+                        {...this.panResponder.panHandlers}
+                        >
                         <Routing route={this.state.routeName} />
                     </View>
                 </View>
@@ -71,12 +73,8 @@ class TemplateApp extends Component {
     componentWillMount() {
         this.panResponder = PanResponder.create({
 
-            onStartShouldSetPanResponder: (evt) => {
-                return evt.nativeEvent.touches.length === 1;
-            },
-
-            onMoveShouldSetPanResponder: (evt) => {
-                return evt.nativeEvent.touches.length === 1;
+            onMoveShouldSetPanResponder: (evt, gestureState) => {
+                return this.getDirectionAndColor(gestureState);
             },
 
             onPanResponderMove: (evt, gestureState) => {
@@ -89,14 +87,37 @@ class TemplateApp extends Component {
                 this.previousTop = this.previousTop + dy;
             },
             onPanResponderTerminate: (e, gestureState) => {
+                if (gestureState.dx == 0 && gestureState.dy == 0)
+                    return true;
                 this.handleSwipeEnd();
             },
             onPanResponderRelease: (e, gestureState) => {
+                if (gestureState.dx == 0 && gestureState.dy == 0)
+                    return true;
                 this.handleSwipeEnd();
             },
 
             onPanResponderTerminationRequest: () => true,
         });
+    }
+
+    getDirectionAndColor = ({ moveX, moveY, dx, dy}) => {
+        const draggedDown = dy > 30;
+        const draggedUp = dy < -30;
+        const draggedLeft = dx < -30;
+        const draggedRight = dx > 30;
+
+        if (draggedDown)
+            return true;
+        if (draggedUp)
+            return true;
+        if (draggedLeft)
+            return true;
+        if (draggedRight)
+            return true;
+
+        return false;
+
     }
 
     handleSwipeEnd = () => {
