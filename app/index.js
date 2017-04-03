@@ -5,6 +5,7 @@ import { Text, View, TouchableHighlight, PanResponder } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Style from './styles';
 
+import SignIn from './routes/signIn';
 import NavBarButton from './components/NavBarButton/NavBarButton';
 
 var previousLeft = 0;
@@ -18,6 +19,8 @@ class TemplateApp extends Component {
 
         // Here we set the default selected tab button.
         this.state = {
+            //routeName: 'SignIn',
+            //selectedTab: 'SignIn',
             routeName: 'Tab 1',
             selectedTab: 'Tab 1',
         }
@@ -40,25 +43,28 @@ class TemplateApp extends Component {
     }
 
     render() {
-
-        return (
-            // Here you can add another NavBarButton.
-            <View style={Style.rootContainer}
-                onMoveShouldSetResponder={(evt) => true}
-                onResponderGrant={(evt) => { this.swipe('Tab 2') } }
-                {...this.panResponder.panHandlers}
-                >
-                <View style={Style.navBar}>
-                    <NavBarButton value="Tab 1" onPress={() => this.changeState('Tab 1')} name='home' selectedTab={this.state.selectedTab}></NavBarButton>
-                    <NavBarButton value="Tab 2" onPress={() => this.changeState('Tab 2')} name='star' selectedTab={this.state.selectedTab}></NavBarButton>
-                    <NavBarButton value="Tab 3" onPress={() => this.changeState('Tab 3')} name='gift' selectedTab={this.state.selectedTab}></NavBarButton>
-                    <NavBarButton value="Tab 4" onPress={() => this.changeState('Tab 4')} name='user' selectedTab={this.state.selectedTab}></NavBarButton>
+        if (this.state.routeName == 'SignIn') {
+            return (
+                <SignIn />
+            );
+        }
+        else
+            return (
+                // Here you can add another NavBarButton. Use Fontawesome icon.
+                <View style={Style.rootContainer}
+                    {...this.panResponder.panHandlers}
+                    >
+                    <View style={Style.navBar}>
+                        <NavBarButton value="Tab 1" onPress={() => this.changeState('Tab 1')} name='home' selectedTab={this.state.selectedTab}></NavBarButton>
+                        <NavBarButton value="Tab 2" onPress={() => this.changeState('Tab 2')} name='star' selectedTab={this.state.selectedTab}></NavBarButton>
+                        <NavBarButton value="Tab 3" onPress={() => this.changeState('Tab 3')} name='gift' selectedTab={this.state.selectedTab}></NavBarButton>
+                        <NavBarButton value="Tab 4" onPress={() => this.changeState('Tab 4')} name='user' selectedTab={this.state.selectedTab}></NavBarButton>
+                    </View>
+                    <View style={Style.contentPlaceHolder}>
+                        <Routing route={this.state.routeName} />
+                    </View>
                 </View>
-                <View style={Style.contentPlaceHolder}>
-                    <Routing route={this.state.routeName} />
-                </View>
-            </View>
-        )
+            )
     }
 
 
