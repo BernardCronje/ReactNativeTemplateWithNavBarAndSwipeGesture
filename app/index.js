@@ -74,7 +74,7 @@ class TemplateApp extends Component {
         this.panResponder = PanResponder.create({
 
             onMoveShouldSetPanResponder: (evt, gestureState) => {
-                return this.getDirectionAndColor(gestureState);
+                return this.isValidMove(gestureState);
             },
 
             onPanResponderMove: (evt, gestureState) => {
@@ -101,7 +101,7 @@ class TemplateApp extends Component {
         });
     }
 
-    getDirectionAndColor = ({ moveX, moveY, dx, dy}) => {
+    isValidMove = ({ moveX, moveY, dx, dy}) => {
         const draggedDown = dy > 30;
         const draggedUp = dy < -30;
         const draggedLeft = dx < -30;
@@ -127,8 +127,9 @@ class TemplateApp extends Component {
         if (this.previousTop == 0)
             return;
 
+        // swipe works inversely.
         if (this.previousTop < 100 && this.previousTop > -100) {
-            if (this.previousLeft > 50) {
+            if (this.previousLeft < -50) {
                 switch (this.state.selectedTab) {
                     case 'Tab 1':
                         this.changeState('Tab 2');
@@ -146,8 +147,8 @@ class TemplateApp extends Component {
                         break;
                 }
             }
-
-            if (this.previousLeft < -50) {
+            // swipe works inversely.
+            if (this.previousLeft > 50) {
                 switch (this.state.selectedTab) {
                     case 'Tab 1':
                         this.changeState('Tab 4');
